@@ -46,15 +46,18 @@ set(LIBS
         LIBDD
         pthread
         mysqlclient
-            )
+        )
 
 set(TEST_BASE_LIST
-        tests/base/test1.cc
+        tests/base/thread_test1.cc
+        tests/base/timestamp_test1.cc
         )
+
 foreach (source ${TEST_BASE_LIST})
+    set(module base)
     string(REPLACE ".cc" "" test_name ${source})
-    string(REPLACE "tests/base/" "" testName ${test_name})
+    string(REPLACE "tests/${module}/" "${module}_" testName ${test_name})
     add_executable(${testName} ${source})
     target_link_libraries(${testName} ${LIBS})
-    #	add_test(${test_name} ${src}
+    set_target_properties(${testName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/${module})
 endforeach ()

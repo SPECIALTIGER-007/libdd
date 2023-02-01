@@ -7,14 +7,14 @@ AlignConsecutiveAssignments: None
 AlignEscapedNewlines: Left
 #AlignTrailingComments: Always
 AlignOperands: Align
-AllowAllArgumentsOnNextLine: false
+AllowAllArgumentsOnNextLine: true
 PackConstructorInitializers: NextLine
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
-AllowShortLambdasOnASingleLine: None
+AllowShortLambdasOnASingleLine: Empty
 AllowShortLoopsOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 AlwaysBreakAfterReturnType: None
