@@ -1,9 +1,8 @@
 #include "Timestamp.h"
 
-namespace libdd {
 // 获取当前时间戳
 Timestamp Timestamp::now() {
-    struct timeval tv {};
+    struct timeval tv{};
     // 获取微妙和秒
     // 在x86-64平台gettimeofday()已不是系统调用,不会陷入内核,
     // 多次调用不会有性能损失.
@@ -18,7 +17,7 @@ Timestamp Timestamp::now() {
 std::string Timestamp::toFormattedString(bool showMicroseconds) const {
     char buf[64] = {0};
     auto seconds = static_cast<time_t>(microSecondsSinceEpoch_ /
-                                       kMicroSecondsPerSecond);
+                                         kMicroSecondsPerSecond);
     // 使用localtime函数将秒数格式化成日历时间
     tm *tm_time = localtime(&seconds);
     if (showMicroseconds) {
@@ -36,5 +35,11 @@ std::string Timestamp::toFormattedString(bool showMicroseconds) const {
     return buf;
 }
 
+// int main()
+// {
+//     Timestamp time;
+//     std::cout << time.now().toFormattedString() << std::endl;
+//     std::cout << time.now().toFormattedString(true) << std::endl;
 
-} // namespace libdd
+//     return 0;
+// }

@@ -10,7 +10,7 @@ SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 SET(PROJECT_BINARY_DIR ${PROJECT_SOURCE_DIR})
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -rdynamic -O2 -fPIC -std=c++17 -Wall -Wno-deprecated -Werror")
+set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -rdynamic -O2 -fPIC -std=c++17 -Wall -Wno-deprecated")
 set(CMAKE_BUILD_TYPE Debug)
 
 include_directories(
@@ -49,12 +49,63 @@ set(LIBS
         )
 
 set(TEST_BASE_LIST
-        tests/base/thread_test1.cc
-        tests/base/timestamp_test1.cc
+        tests/base/ThreadPool.cc
         )
 
 foreach (source ${TEST_BASE_LIST})
     set(module base)
+    string(REPLACE ".cc" "" test_name ${source})
+    string(REPLACE "tests/${module}/" "${module}_" testName ${test_name})
+    add_executable(${testName} ${source})
+    target_link_libraries(${testName} ${LIBS})
+    set_target_properties(${testName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/${module})
+endforeach ()
+
+set(TEST_BASE_LIST
+        tests/http/test.cc
+        )
+
+foreach (source ${TEST_BASE_LIST})
+    set(module http)
+    string(REPLACE ".cc" "" test_name ${source})
+    string(REPLACE "tests/${module}/" "${module}_" testName ${test_name})
+    add_executable(${testName} ${source})
+    target_link_libraries(${testName} ${LIBS})
+    set_target_properties(${testName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/${module})
+endforeach ()
+
+set(TEST_BASE_LIST
+        tests/logger/AsyncLoggingTest.cc
+        )
+
+foreach (source ${TEST_BASE_LIST})
+    set(module logger)
+    string(REPLACE ".cc" "" test_name ${source})
+    string(REPLACE "tests/${module}/" "${module}_" testName ${test_name})
+    add_executable(${testName} ${source})
+    target_link_libraries(${testName} ${LIBS})
+    set_target_properties(${testName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/${module})
+endforeach ()
+
+set(TEST_BASE_LIST
+        tests/memory/MemoryPoolTest.cc
+        )
+
+foreach (source ${TEST_BASE_LIST})
+    set(module memory)
+    string(REPLACE ".cc" "" test_name ${source})
+    string(REPLACE "tests/${module}/" "${module}_" testName ${test_name})
+    add_executable(${testName} ${source})
+    target_link_libraries(${testName} ${LIBS})
+    set_target_properties(${testName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/${module})
+endforeach ()
+
+set(TEST_BASE_LIST
+        tests/mysql/MysqlPoolTest.cc
+        )
+
+foreach (source ${TEST_BASE_LIST})
+    set(module mysql)
     string(REPLACE ".cc" "" test_name ${source})
     string(REPLACE "tests/${module}/" "${module}_" testName ${test_name})
     add_executable(${testName} ${source})

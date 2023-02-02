@@ -1,8 +1,6 @@
 #include "FileUtil.h"
-
 #include "Logging.h"
 
-namespace libdd {
 FileUtil::FileUtil(std::string& fileName)
     : fp_(::fopen(fileName.c_str(), "ae")), writtenBytes_(0) {
     // 将fd_缓冲区设置为本地的buffer_
@@ -50,4 +48,3 @@ size_t FileUtil::write(const char* data, size_t len) {
      */
     return ::fwrite_unlocked(data, 1, len, fp_);
 }
-} // namespace libdd

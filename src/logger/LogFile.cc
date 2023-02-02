@@ -1,12 +1,8 @@
 #include "LogFile.h"
 
-#include <memory>
-#include <utility>
-
-namespace libdd {
-LogFile::LogFile(std::string basename, off_t rollSize, int flushInterval,
+LogFile::LogFile(const std::string& basename, off_t rollSize, int flushInterval,
                  int checkEveryN)
-    : basename_(std::move(basename)),
+    : basename_(basename),
       rollSize_(rollSize),
       flushInterval_(flushInterval),
       checkEveryN_(checkEveryN),
@@ -34,7 +30,7 @@ void LogFile::appendInLock(const char* data, int len) {
         ++count_;
         if (count_ >= checkEveryN_) {
             count_ = 0;
-            time_t now = ::time(nullptr);
+            time_t now = ::time(NULL);
             time_t thisPeriod = now / kRollPerSeconds_ * kRollPerSeconds_;
             if (thisPeriod != startOfPeriod_) {
                 rollFile();
@@ -66,7 +62,7 @@ bool LogFile::rollFile() {
         lastFlush_ = now;
         startOfPeriod_ = start;
         // 让file_指向一个名为filename的文件，相当于新建了一个文件
-        file_ = std::make_unique<FileUtil>(filename);
+        file_.reset(new FileUtil(filename));
         return true;
     }
     return false;
@@ -78,8 +74,8 @@ std::string LogFile::getLogFileName(const std::string& basename, time_t* now) {
     filename = basename;
 
     char timebuf[32];
-    struct tm tm {};
-    *now = time(nullptr);
+    struct tm tm;
+    *now = time(NULL);
     localtime_r(now, &tm);
     // 写入时间
     strftime(timebuf, sizeof timebuf, ".%Y%m%d-%H%M%S", &tm);
@@ -89,4 +85,3 @@ std::string LogFile::getLogFileName(const std::string& basename, time_t* now) {
 
     return filename;
 }
-} // namespace libdd

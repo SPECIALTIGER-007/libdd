@@ -1,17 +1,16 @@
 #ifndef LOG_STREAM_H
 #define LOG_STREAM_H
 
-#include <string>
-
 #include "FixedBuffer.h"
 #include "noncopyable.h"
+
+#include <string>
 
 /**
  *  比如SourceFile类和时间类就会用到
  *  const char* data_;
  *  int size_;
  */
-namespace libdd {
 class GeneralTemplate : noncopyable {
 public:
     GeneralTemplate(): data_(nullptr), len_(0) {}
@@ -71,7 +70,5 @@ private:
 
     Buffer buffer_;
 };
-} // namespace libdd
-
 
 #endif // LOG_STREAM_H

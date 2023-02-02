@@ -1,11 +1,10 @@
 #include "AsyncLogging.h"
+#include "Timestamp.h"
+
 
 #include <memory>
 #include <utility>
 
-#include "Timestamp.h"
-
-namespace libdd {
 AsyncLogging::AsyncLogging(std::string basename, off_t rollSize,
                            int flushInterval)
     : flushInterval_(flushInterval),
@@ -27,12 +26,12 @@ AsyncLogging::AsyncLogging(std::string basename, off_t rollSize,
     buffers_.reserve(16);
 }
 
-void AsyncLogging::append(const char* logLine, int len) {
+void AsyncLogging::append(const char* logline, int len) {
     // lock在构造函数中自动绑定它的互斥体并加锁，在析构函数中解锁，大大减少了死锁的风险
     std::lock_guard<std::mutex> lock(mutex_);
     // 缓冲区剩余空间足够则直接写入
     if (currentBuffer_->avail() > len) {
-        currentBuffer_->append(logLine, len);
+        currentBuffer_->append(logline, len);
     } else {
         // 当前缓冲区空间不够，将新信息写入备用缓冲区
         buffers_.push_back(std::move(currentBuffer_));
@@ -42,7 +41,7 @@ void AsyncLogging::append(const char* logLine, int len) {
             // 备用缓冲区也不够时，重新分配缓冲区，这种情况很少见
             currentBuffer_ = std::make_unique<Buffer>();
         }
-        currentBuffer_->append(logLine, len);
+        currentBuffer_->append(logline, len);
         // 唤醒写入磁盘得后端线程
         cond_.notify_one();
     }
@@ -108,4 +107,3 @@ void AsyncLogging::threadFunc() {
     }
     output.flush();
 }
-} // namespace libdd

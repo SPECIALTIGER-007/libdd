@@ -1,28 +1,29 @@
-//
-// Created by tiger on 2/1/23.
-//
-
 #include "Thread.h"
-
 #include <semaphore.h>
 
 #include <memory>
-#include <utility>
 
+#include <utility>
 #include "CurrentThread.h"
 
-namespace libdd {
 std::atomic_int32_t Thread::numCreated_(0);
 
-Thread::Thread(Thread::ThreadFunc func, std::string name)
-    : func_(std::move(func)), // EventLoopThread::threadFunc()
-      name_(std::move(name)) {
-    int num = ++numCreated_;
-    if (name_.empty()) {
-        char buf[32] = {0};
-        snprintf(buf, sizeof(buf), "Thread%d", num);
-        name_ = buf;
-    }
+/**
+ * TODO:error
+ * default argument given for parameter 2 of ‘Thread::Thread(Thread::ThreadFunc,
+ * const string&)’GCC
+ * 默认参数在定义和声明中只能出现一次，不能声明和定义都有默认参数
+ */
+Thread::Thread(ThreadFunc func, std::string name)
+    : started_(false),        // 还未开始
+      joined_(false),         // 还未设置等待线程
+      tid_(0),                // 初始 tid 设置为0
+      func_(std::move(func)), // EventLoopThread::threadFunc()
+      name_(std::move(name))             // 默认姓名是空字符串
+
+{
+    // 设置线程索引编号和姓名
+    setDefaultName();
 }
 
 Thread::~Thread() {
@@ -33,18 +34,18 @@ Thread::~Thread() {
     }
 }
 
-void Thread::start() noexcept {
+void Thread::start() {
     started_ = true;
     sem_t sem;
     sem_init(&sem, false, 0);
     // 开启线程
-    thread_ = std::make_shared<std::thread>([this, &sem]() {
+    thread_ = std::make_shared<std::thread>([&]() {
         // 获取线程tid
         tid_ = CurrentThread::tid();
-        // 开启一个新线程专门执行该线程函数
-        func_();
         // v操作
         sem_post(&sem);
+        // 开启一个新线程专门执行该线程函数
+        func_();
     });
 
     /**
@@ -55,10 +56,17 @@ void Thread::start() noexcept {
     sem_wait(&sem);
 }
 
-void Thread::join() noexcept {
+void Thread::join() {
     joined_ = true;
     // 等待线程执行完毕
     thread_->join();
 }
 
-} // namespace libdd
+void Thread::setDefaultName() {
+    int num = ++numCreated_;
+    if (name_.empty()) {
+        char buf[32] = {0};
+        snprintf(buf, sizeof(buf), "Thread%d", num);
+        name_ = buf;
+    }
+}

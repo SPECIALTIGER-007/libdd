@@ -1,17 +1,15 @@
 #ifndef LOGGING_H
 #define LOGGING_H
 
-#include <sys/time.h>
-
-#include <cerrno>
-#include <cstdio>
-#include <cstring>
-#include <functional>
-
 #include "LogStream.h"
 #include "Timestamp.h"
 
-namespace libdd {
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/time.h>
+#include <functional>
+
 // SourceFile的作用是提取文件名
 class SourceFile {
 public:
@@ -54,6 +52,7 @@ public:
         return impl_.stream_;
     }
 
+    // TODO:static关键字作用的函数必须在源文件实现?
     static LogLevel logLevel();
     static void setLogLevel(LogLevel level);
 
@@ -105,7 +104,5 @@ const char* getErrnoMsg(int savedErrno);
 #define LOG_WARN Logger(__FILE__, __LINE__, Logger::WARN).stream()
 #define LOG_ERROR Logger(__FILE__, __LINE__, Logger::ERROR).stream()
 #define LOG_FATAL Logger(__FILE__, __LINE__, Logger::FATAL).stream()
-
-} // namespace libdd
 
 #endif // LOGGING_H

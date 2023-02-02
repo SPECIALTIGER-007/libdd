@@ -1,14 +1,15 @@
 #ifndef THREAD_POOL_H
 #define THREAD_POOL_H
 
+#include "Logging.h"
+#include "Thread.h"
+#include "noncopyable.h"
+
 #include <condition_variable>
 #include <deque>
 #include <mutex>
 #include <vector>
 
-#include "Thread.h"
-#include "noncopyable.h"
-namespace libdd {
 class ThreadPool : noncopyable {
 public:
     using ThreadFunction = std::function<void()>;
@@ -45,7 +46,5 @@ private:
     bool running_;
     size_t threadSize_{};
 };
-
-} // namespace libdd
 
 #endif // THREAD_POOL_H

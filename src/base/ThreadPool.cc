@@ -2,9 +2,6 @@
 
 #include <utility>
 
-#include "Logging.h"
-
-namespace libdd {
 ThreadPool::ThreadPool(std::string name)
     : mutex_(), cond_(), name_(std::move(name)), running_(false) {}
 
@@ -23,7 +20,10 @@ void ThreadPool::start() {
         char id[32];
         snprintf(id, sizeof(id), "%d", i + 1);
         threads_.emplace_back(new Thread(
-                std::bind(&ThreadPool::runInThread, this), name_ + id));
+                [this] {
+                    runInThread();
+                },
+                name_ + id));
         threads_[i]->start();
     }
     // 不创建新线程
@@ -45,7 +45,7 @@ size_t ThreadPool::queueSize() const {
 
 void ThreadPool::add(const ThreadFunction& ThreadFunction) {
     std::unique_lock<std::mutex> lock(mutex_);
-    queue_.emplace_back(ThreadFunction);
+    queue_.push_back(ThreadFunction);
     cond_.notify_one();
 }
 
@@ -76,4 +76,3 @@ void ThreadPool::runInThread() {
         LOG_WARN << "runInThread throw exception";
     }
 }
-} // namespace libdd

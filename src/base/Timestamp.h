@@ -2,11 +2,9 @@
 #define TIME_STAMP_H
 
 #include <sys/time.h>
-
 #include <iostream>
 #include <string>
 
-namespace libdd {
 class Timestamp {
 public:
     Timestamp(): microSecondsSinceEpoch_(0) {}
@@ -18,23 +16,22 @@ public:
     static Timestamp now();
 
     // 用std::string形式返回,格式[millisec].[microsec]
-    //    [[nodiscard]] std::string toString() const;
+    std::string toString() const;
     // 格式, "%4d年%02d月%02d日 星期%d %02d:%02d:%02d.%06d",时分秒.微秒
-    [[nodiscard]] std::string toFormattedString(
-            bool showMicroseconds = false) const;
+    std::string toFormattedString(bool showMicroseconds = false) const;
 
     // 返回当前时间戳的微妙
-    [[nodiscard]] int64_t microSecondsSinceEpoch() const {
+    int64_t microSecondsSinceEpoch() const {
         return microSecondsSinceEpoch_;
     }
     // 返回当前时间戳的秒数
-    [[maybe_unused]] [[nodiscard]] time_t secondsSinceEpoch() const {
+    time_t secondsSinceEpoch() const {
         return static_cast<time_t>(microSecondsSinceEpoch_ /
                                    kMicroSecondsPerSecond);
     }
 
     // 失效的时间戳，返回一个值为0的Timestamp
-    [[maybe_unused]] static Timestamp invalid() {
+    static Timestamp invalid() {
         return {};
     }
 
@@ -58,14 +55,12 @@ inline bool operator==(Timestamp lhs, Timestamp rhs) {
 }
 
 // 如果是重复定时任务就会对此时间戳进行增加。
-[[maybe_unused]] inline Timestamp addTime(Timestamp timestamp, double seconds) {
+inline Timestamp addTime(Timestamp timestamp, double seconds) {
     // 将延时的秒数转换为微妙
     auto delta =
             static_cast<int64_t>(seconds * Timestamp::kMicroSecondsPerSecond);
     // 返回新增时后的时间戳
     return Timestamp(timestamp.microSecondsSinceEpoch() + delta);
 }
-} // namespace libdd
-
 
 #endif // TIME_STAMP_H

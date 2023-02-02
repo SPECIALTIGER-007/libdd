@@ -1,15 +1,14 @@
 #ifndef LOG_FILE_H
 #define LOG_FILE_H
 
+#include "FileUtil.h"
+
 #include <memory>
 #include <mutex>
 
-#include "FileUtil.h"
-
-namespace libdd {
 class LogFile {
 public:
-    LogFile(std::string  basename, off_t rollSize, int flushInterval = 3,
+    LogFile(const std::string& basename, off_t rollSize, int flushInterval = 3,
             int checkEveryN = 1024);
     ~LogFile();
 
@@ -36,7 +35,5 @@ private:
 
     const static int kRollPerSeconds_ = 60 * 60 * 24;
 };
-} // namespace libdd
-
 
 #endif // LOG_FILE_H

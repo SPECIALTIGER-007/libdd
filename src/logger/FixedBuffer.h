@@ -1,16 +1,12 @@
 #ifndef FIXED_BUFFER_H
 #define FIXED_BUFFER_H
 
+#include <assert.h>
+#include <string.h> // memcpy
 #include <strings.h>
-
-#include <cassert>
-#include <cstring> // memcpy
 #include <string>
-
 #include "noncopyable.h"
 
-
-namespace libdd {
 const int kSmallBuffer = 4000;
 const int kLargeBuffer = 4000 * 1000;
 
@@ -59,10 +55,8 @@ private:
         return data_ + sizeof(data_);
     }
 
-    char data_[SIZE]{};
+    char data_[SIZE];
     char* cur_;
 };
-
-} // namespace libdd
 
 #endif // FIXED_BUFFER_H
