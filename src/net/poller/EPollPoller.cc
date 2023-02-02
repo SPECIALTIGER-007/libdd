@@ -1,5 +1,5 @@
 #include "EPollPoller.h"
-#include <string.h>
+#include <cstring>
 
 const int kNew = -1;    // 某个channel还没添加至Poller          //
                         // channel的成员index_初始化为-1
@@ -94,7 +94,7 @@ void EPollPoller::fillActiveChannels(int numEvents,
                                      ChannelList *activeChannels) const {
     for (int i = 0; i < numEvents; ++i) {
         // void* => Channel*
-        Channel *channel = static_cast<Channel *>(events_[i].data.ptr);
+        auto *channel = static_cast<Channel *>(events_[i].data.ptr);
         channel->set_revents(events_[i].events);
         activeChannels->push_back(channel);
     }
@@ -116,7 +116,7 @@ void EPollPoller::removeChannel(Channel *channel) {
 }
 
 void EPollPoller::update(int operation, Channel *channel) {
-    epoll_event event;
+    epoll_event event{};
     ::memset(&event, 0, sizeof(event));
 
     int fd = channel->fd();

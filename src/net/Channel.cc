@@ -9,7 +9,7 @@ Channel::Channel(EventLoop *loop, int fd)
     : loop_(loop), fd_(fd), events_(0), revents_(0), index_(-1), tied_(false) {}
 
 // TODO:析构操作和断言，判断是否是在当前线程
-Channel::~Channel() {}
+Channel::~Channel() = default;
 
 // 在TcpConnection建立得时候会调用
 void Channel::tie(const std::shared_ptr<void> &obj) {

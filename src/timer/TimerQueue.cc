@@ -1,10 +1,9 @@
 #include "TimerQueue.h"
-#include "Channel.h"
 #include "EventLoop.h"
 #include "Logging.h"
 #include "Timer.h"
 
-#include <string.h>
+#include <cstring>
 #include <sys/timerfd.h>
 #include <unistd.h>
 
@@ -40,8 +39,8 @@ TimerQueue::~TimerQueue() {
 }
 
 void TimerQueue::addTimer(TimerCallback cb, Timestamp when, double interval) {
-    Timer* timer = new Timer(std::move(cb), when, interval);
-    loop_->runInLoop(std::bind(&TimerQueue::addTimerInLoop, this, timer));
+    auto* timer = new Timer(std::move(cb), when, interval);
+    loop_->runInLoop([this, timer] { addTimerInLoop(timer); });
 }
 
 void TimerQueue::addTimerInLoop(Timer* timer) {
@@ -56,8 +55,8 @@ void TimerQueue::addTimerInLoop(Timer* timer) {
 
 // 重置timerfd
 void TimerQueue::resetTimerfd(int timerfd_, Timestamp expiration) {
-    struct itimerspec newValue;
-    struct itimerspec oldValue;
+    struct itimerspec newValue{};
+    struct itimerspec oldValue{};
     memset(&newValue, '\0', sizeof(newValue));
     memset(&oldValue, '\0', sizeof(oldValue));
 
@@ -68,7 +67,7 @@ void TimerQueue::resetTimerfd(int timerfd_, Timestamp expiration) {
         microSecondDif = 100;
     }
 
-    struct timespec ts;
+    struct timespec ts{};
     ts.tv_sec = static_cast<time_t>(microSecondDif /
                                     Timestamp::kMicroSecondsPerSecond);
     ts.tv_nsec = static_cast<long>(
@@ -94,7 +93,7 @@ std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now) {
     std::vector<Entry> expired;
     // TODO:???
     Entry sentry(now, reinterpret_cast<Timer*>(UINTPTR_MAX));
-    TimerList::iterator end = timers_.lower_bound(sentry);
+    auto end = timers_.lower_bound(sentry);
     std::copy(timers_.begin(), end, back_inserter(expired));
     timers_.erase(timers_.begin(), end);
 
@@ -140,7 +139,7 @@ void TimerQueue::reset(const std::vector<Entry>& expired, Timestamp now) {
 bool TimerQueue::insert(Timer* timer) {
     bool earliestChanged = false;
     Timestamp when = timer->expiration();
-    TimerList::iterator it = timers_.begin();
+    auto it = timers_.begin();
     if (it == timers_.end() || when < it->first) {
         // 说明最早的定时器已经被替换了
         earliestChanged = true;

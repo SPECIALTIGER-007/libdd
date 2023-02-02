@@ -29,7 +29,7 @@ public:
     }
 
     // 在当前线程同步调用函数
-    void runInLoop(Functor cb);
+    void runInLoop(const Functor& cb);
     /**
      * 把cb放入队列，唤醒loop所在的线程执行cb
      *
@@ -38,7 +38,7 @@ public:
      * 在queueLoop中发现当前的线程不是创建这个subLoop的线程，将此函数装入subLoop的pendingFunctors容器中
      * 之后mainLoop线程会调用subLoop::wakeup向subLoop的eventFd写数据，以此唤醒subLoop来执行pengdingFunctors
      */
-    void queueInLoop(Functor cb);
+    void queueInLoop(const Functor& cb);
 
     // 用来唤醒loop所在的线程
     void wakeup();

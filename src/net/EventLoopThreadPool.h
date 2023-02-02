@@ -13,7 +13,7 @@ class EventLoopThreadPool {
 public:
     // 用户传入的函数
     using ThreadInitCallback = std::function<void(EventLoop *)>;
-    EventLoopThreadPool(EventLoop *baseLoop, const std::string &nameArg);
+    EventLoopThreadPool(EventLoop *baseLoop, std::string nameArg);
     ~EventLoopThreadPool();
 
     // 设置线程数量
@@ -32,7 +32,7 @@ public:
     bool started() const {
         return started_;
     }
-    const std::string name() const {
+    std::string name() const {
         return name_;
     }
 

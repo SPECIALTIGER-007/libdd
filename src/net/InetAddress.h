@@ -3,12 +3,12 @@
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <string.h>
+#include <cstring>
 #include <string>
 
 class InetAddress {
 public:
-    explicit InetAddress(uint16_t port = 0, std::string ip = "127.0.0.1");
+    explicit InetAddress(uint16_t port = 0, const std::string& ip = "127.0.0.1");
     explicit InetAddress(const sockaddr_in &addr): addr_(addr) {}
 
     std::string toIp() const;
@@ -23,7 +23,7 @@ public:
     }
 
 private:
-    sockaddr_in addr_;
+    sockaddr_in addr_{};
 };
 
 #endif // INET_ADDRESS_H

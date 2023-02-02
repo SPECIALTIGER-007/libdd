@@ -1,6 +1,5 @@
 #include "Acceptor.h"
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <unistd.h>
 #include <functional>
 #include "InetAddress.h"

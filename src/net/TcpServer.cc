@@ -1,5 +1,6 @@
-#include <string.h>
+#include <cstring>
 #include <functional>
+#include <utility>
 
 #include "Logging.h"
 #include "TcpConnection.h"
@@ -14,10 +15,10 @@ static EventLoop *CheckLoopNotNull(EventLoop *loop) {
 }
 
 TcpServer::TcpServer(EventLoop *loop, const InetAddress &listenAddr,
-                     const std::string &nameArg, Option option)
+                     std::string nameArg, Option option)
     : loop_(CheckLoopNotNull(loop)),
       ipPort_(listenAddr.toIpPort()),
-      name_(nameArg),
+      name_(std::move(nameArg)),
       acceptor_(new Acceptor(loop, listenAddr, option == kReusePort)),
       threadPool_(new EventLoopThreadPool(loop, name_)),
       connectionCallback_(),
@@ -77,7 +78,7 @@ void TcpServer::newConnection(int sockfd, const InetAddress &peerAddr) {
              << peerAddr.toIpPort().c_str();
 
     // 通过sockfd获取其绑定的本机的ip地址和端口信息
-    sockaddr_in local;
+    sockaddr_in local{};
     ::memset(&local, 0, sizeof(local));
     socklen_t addrlen = sizeof(local);
     if (::getsockname(sockfd, (sockaddr *) &local, &addrlen) < 0) {

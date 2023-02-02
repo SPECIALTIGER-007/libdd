@@ -20,7 +20,7 @@ MysqlConn::~MysqlConn() {
 
 // 连接数据库
 bool MysqlConn::connect(const std::string& user, const std::string& passwd,
-                        const std::string dbName, const std::string& ip,
+                        const std::string& dbName, const std::string& ip,
                         const unsigned int& port) {
     // 尝试与运行在主机上的MySQL数据库引擎建立连接
     MYSQL* ptr =
@@ -65,13 +65,13 @@ std::string MysqlConn::value(int index) {
     int rowCount = mysql_num_fields(result_);
     if (index >= rowCount || index < 0) {
         // 获取字段索引不合法，返回空字符串
-        return std::string();
+        return {};
     }
     // 考虑到储存的可能是二进制字符串，其中含有'\0'
     // 那么我们无法获得完整字符串，因此需要获取字符串头指针和字符串长度
     char* val = row_[index];
     unsigned long length = mysql_fetch_lengths(result_)[index];
-    return std::string(val, length);
+    return {val, length};
 }
 
 // 事务操作

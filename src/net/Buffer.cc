@@ -1,9 +1,8 @@
-#include <errno.h>
+#include <cerrno>
 #include <sys/uio.h>
 #include <unistd.h>
 
 #include "Buffer.h"
-#include "Logging.h"
 
 const char Buffer::kCRLF[] = "\r\n";
 

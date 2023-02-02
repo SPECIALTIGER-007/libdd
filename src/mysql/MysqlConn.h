@@ -14,7 +14,7 @@ public:
     ~MysqlConn();
     // 连接数据库
     bool connect(const std::string& user, const std::string& passwd,
-                 const std::string dbName, const std::string& ip,
+                 const std::string& dbName, const std::string& ip,
                  const unsigned int& port = 3306);
     // 更新数据库：包括 insert update delete 操作
     bool update(const std::string& sql);

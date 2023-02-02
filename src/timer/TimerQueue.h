@@ -50,7 +50,7 @@ private:
     // Timer list sorted by expiration
     TimerList timers_; // 定时器队列（内部实现是红黑树）
 
-    bool callingExpiredTimers_; // 标明正在获取超时定时器
+    bool callingExpiredTimers_{}; // 标明正在获取超时定时器
 };
 
 #endif // TIMER_QUEUE_H

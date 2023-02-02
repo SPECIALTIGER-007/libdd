@@ -1,10 +1,10 @@
-#include <errno.h>
-#include <netinet/tcp.h>
+#include <cerrno>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <functional>
 #include <string>
+#include <utility>
 
 #include "Channel.h"
 #include "EventLoop.h"
@@ -21,11 +21,11 @@ static EventLoop *CheckLoopNotNull(EventLoop *loop) {
     return loop;
 }
 
-TcpConnection::TcpConnection(EventLoop *loop, const std::string &nameArg,
+TcpConnection::TcpConnection(EventLoop *loop, std::string nameArg,
                              int sockfd, const InetAddress &localAddr,
                              const InetAddress &peerAddr)
     : loop_(CheckLoopNotNull(loop)),
-      name_(nameArg),
+      name_(std::move(nameArg)),
       state_(kConnecting),
       reading_(true),
       socket_(new Socket(sockfd)),

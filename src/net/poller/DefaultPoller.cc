@@ -1,7 +1,7 @@
 #include "EPollPoller.h"
 #include "Poller.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 // 获取默认的Poller实现方式
 Poller* Poller::newDefaultPoller(EventLoop* loop) {
     if (::getenv("MUDUO_USE_POLL")) {

@@ -1,11 +1,12 @@
 #include "Logging.h"
-#include "CurrentThread.h"
+
+#include <utility>
 
 namespace ThreadInfo {
 __thread char t_errnobuf[512];
 __thread char t_time[64];
 __thread time_t t_lastSecond;
-}; // namespace ThreadInfo
+} // namespace ThreadInfo
 
 const char* getErrnoMsg(int savedErrno) {
     return strerror_r(savedErrno, ThreadInfo::t_errnobuf,
@@ -54,7 +55,7 @@ Logger::Impl::Impl(Logger::LogLevel level, int savedErrno, const char* file,
 // Timestamp::toString方法的思路，只不过这里需要输出到流
 void Logger::Impl::formatTime() {
     Timestamp now = Timestamp::now();
-    time_t seconds = static_cast<time_t>(now.microSecondsSinceEpoch() /
+    auto seconds = static_cast<time_t>(now.microSecondsSinceEpoch() /
                                          Timestamp::kMicroSecondsPerSecond);
     int microseconds = static_cast<int>(now.microSecondsSinceEpoch() %
                                         Timestamp::kMicroSecondsPerSecond);
@@ -114,9 +115,9 @@ void Logger::setLogLevel(Logger::LogLevel level) {
 }
 
 void Logger::setOutput(OutputFunc out) {
-    g_output = out;
+    g_output = std::move(out);
 }
 
 void Logger::setFlush(FlushFunc flush) {
-    g_flush = flush;
+    g_flush = std::move(flush);
 }

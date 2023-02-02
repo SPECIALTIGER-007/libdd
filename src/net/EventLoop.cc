@@ -1,5 +1,4 @@
 #include "EventLoop.h"
-#include <fcntl.h>
 #include <sys/eventfd.h>
 #include <unistd.h>
 #include "Logging.h"
@@ -97,7 +96,7 @@ void EventLoop::quit() {
 }
 
 // 在当前eventLoop中执行回调函数
-void EventLoop::runInLoop(Functor cb) {
+void EventLoop::runInLoop(const Functor& cb) {
     // 每个EventLoop都保存创建自己的线程tid
     // 我们可以通过CurrentThread::tid()获取当前执行线程的tid然后和EventLoop保存的进行比较
     if (isInLoopThread()) {
@@ -109,7 +108,7 @@ void EventLoop::runInLoop(Functor cb) {
     }
 }
 
-void EventLoop::queueInLoop(Functor cb) {
+void EventLoop::queueInLoop(const Functor& cb) {
     {
         std::unique_lock<std::mutex> lock(mutex_);
         pendingFunctors_.emplace_back(cb); // 使用了std::move

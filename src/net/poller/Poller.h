@@ -14,7 +14,7 @@ class Poller : noncopyable {
 public:
     using ChannelList = std::vector<Channel *>;
 
-    Poller(EventLoop *Loop);
+    explicit Poller(EventLoop *Loop);
     virtual ~Poller() = default;
 
     // 需要交给派生类实现的接口

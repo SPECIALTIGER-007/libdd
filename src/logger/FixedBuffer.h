@@ -1,8 +1,8 @@
 #ifndef FIXED_BUFFER_H
 #define FIXED_BUFFER_H
 
-#include <assert.h>
-#include <string.h> // memcpy
+#include <cassert>
+#include <cstring> // memcpy
 #include <strings.h>
 #include <string>
 #include "noncopyable.h"
@@ -55,7 +55,7 @@ private:
         return data_ + sizeof(data_);
     }
 
-    char data_[SIZE];
+    char data_[SIZE]{};
     char* cur_;
 };
 

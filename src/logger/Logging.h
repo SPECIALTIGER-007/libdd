@@ -4,9 +4,9 @@
 #include "LogStream.h"
 #include "Timestamp.h"
 
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
+#include <cerrno>
+#include <cstdio>
+#include <cstring>
 #include <sys/time.h>
 #include <functional>
 

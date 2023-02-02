@@ -1,6 +1,5 @@
 #include "ConnectionPool.h"
 
-#include <assert.h>
 #include <fstream>
 #include <thread>
 
@@ -94,7 +93,7 @@ void ConnectionPool::recycleConnection() {
 }
 
 void ConnectionPool::addConnection() {
-    MysqlConn* conn = new MysqlConn;
+    auto* conn = new MysqlConn;
     conn->connect(user_, passwd_, dbName_, ip_, port_);
     conn->refreshAliveTime();    // 刷新起始的空闲时间点
     connectionQueue_.push(conn); // 记录新连接

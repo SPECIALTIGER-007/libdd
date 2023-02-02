@@ -1,7 +1,7 @@
 #include "MemoryPool.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 void MemoryPool::createPool() {
     // if (size < PAGE_SIZE || size % PAGE_SIZE != 0)
@@ -28,8 +28,6 @@ void MemoryPool::createPool() {
     pool_->head_->end_ = (unsigned char*) pool_ + PAGE_SIZE;
     pool_->head_->failed_ = 0;
     pool_->current_ = pool_->head_;
-
-    return;
 }
 
 void MemoryPool::destroyPool() {
@@ -101,12 +99,12 @@ void* MemoryPool::mallocSmallNode(unsigned long size) {
     }
 
     // 获取新块的 smallnode 节点
-    SmallNode* smallNode = (SmallNode*) block;
+    auto* smallNode = (SmallNode*) block;
     smallNode->end_ = block + PAGE_SIZE;
     smallNode->next_ = nullptr;
 
     // 分配新块的起始位置
-    unsigned char* addr = (unsigned char*) mp_align_ptr(
+    auto* addr = (unsigned char*) mp_align_ptr(
             block + sizeof(SmallNode), MP_ALIGNMENT);
     smallNode->last_ = addr + size;
     smallNode->quote_++;

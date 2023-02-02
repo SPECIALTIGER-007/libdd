@@ -1,19 +1,18 @@
 #include <memory>
+#include <utility>
 
 #include "EventLoopThread.h"
 #include "EventLoopThreadPool.h"
 
 EventLoopThreadPool::EventLoopThreadPool(EventLoop *baseLoop,
-                                         const std::string &nameArg)
+                                         std::string nameArg)
     : baseLoop_(baseLoop),
-      name_(nameArg),
+      name_(std::move(nameArg)),
       started_(false),
       numThreads_(0),
       next_(0) {}
 
-EventLoopThreadPool::~EventLoopThreadPool() {
-    // Don't delete loop, it's stack variable
-}
+EventLoopThreadPool::~EventLoopThreadPool() = default;
 
 void EventLoopThreadPool::start(const ThreadInitCallback &cb) {
     started_ = true;
@@ -23,7 +22,7 @@ void EventLoopThreadPool::start(const ThreadInitCallback &cb) {
         char buf[name_.size() + 32];
         snprintf(buf, sizeof buf, "%s%d", name_.c_str(), i);
         // 创建EventLoopThread对象
-        EventLoopThread *t = new EventLoopThread(cb, buf);
+        auto *t = new EventLoopThread(cb, buf);
         // 加入此EventLoopThread入容器
         threads_.push_back(std::unique_ptr<EventLoopThread>(t));
         // 底层创建线程 绑定一个新的EventLoop 并返回该loop的地址

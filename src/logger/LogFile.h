@@ -8,7 +8,7 @@
 
 class LogFile {
 public:
-    LogFile(const std::string& basename, off_t rollSize, int flushInterval = 3,
+    LogFile(std::string  basename, off_t rollSize, int flushInterval = 3,
             int checkEveryN = 1024);
     ~LogFile();
 

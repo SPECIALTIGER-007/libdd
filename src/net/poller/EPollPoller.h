@@ -18,7 +18,7 @@ class EPollPoller : public Poller {
     using EventList = std::vector<epoll_event>;
 
 public:
-    EPollPoller(EventLoop *Loop);
+    explicit EPollPoller(EventLoop *Loop);
     ~EPollPoller() override;
 
     // 重写基类Poller的抽象方法
