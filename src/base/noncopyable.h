@@ -8,13 +8,13 @@
 
 // TODO: noncopyable 的学习
 class noncopyable {
-public:
-    noncopyable(const noncopyable &) = delete;
-    noncopyable &operator=(const noncopyable &) = delete;
+ public:
+  noncopyable(const noncopyable &) = delete;
+  noncopyable &operator=(const noncopyable &) = delete;
 
-protected:
-    noncopyable() = default;
-    ~noncopyable() = default;
+ protected:
+  noncopyable() = default;
+  ~noncopyable() = default;
 };
 
-#endif // NONCOPYABLE_H
+#endif  // NONCOPYABLE_H
