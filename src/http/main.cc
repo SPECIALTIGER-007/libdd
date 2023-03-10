@@ -30,7 +30,7 @@ void onRequest(const HttpRequest& req, HttpResponse* resp) {
     textFunction(req, resp);
   } else if (req.path() == "/test") {
     htmlFunction(req, resp);
-  } else if (req.path() == "/p1") {
+  } else if (req.path() == "/p2") {
     pictureFunction(req, resp);
   } else {
     exceptionFunction(req, resp);
