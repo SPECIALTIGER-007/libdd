@@ -47,7 +47,7 @@ TcpConnection::TcpConnection(EventLoop *loop, std::string nameArg, int sockfd, c
 }
 
 TcpConnection::~TcpConnection() {
-  LOG_INFO << "TcpConnection::dtor[" << name_.c_str() << "] at fd=" << channel_->fd()
+  LOG_INFO << "TcpConnection::destruction[" << name_.c_str() << "] at fd=" << channel_->fd()
            << " state=" << static_cast<int>(state_);
 }
 

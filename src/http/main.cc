@@ -1,3 +1,8 @@
+#include <fcntl.h>
+#include <sys/mman.h>
+
+#include <fstream>
+
 #include "HttpRequest.h"
 #include "HttpResponse.h"
 #include "HttpServer.h"
@@ -6,6 +11,7 @@
 extern char favicon[555];
 bool benchmark = false;
 
+// TODO 封装返回方法，并改为unordered_map模式，而非if else
 void onRequest(const HttpRequest& req, HttpResponse* resp) {
   std::cout << "Headers " << req.methodString() << " " << req.path() << std::endl;
 
@@ -38,10 +44,21 @@ void onRequest(const HttpRequest& req, HttpResponse* resp) {
     resp->setContentType("text/plain");
     resp->addHeader("Server", "Muduo");
     resp->setBody("hello, world!\n");
+  } else if (req.path() == "/test-html") {
+    int fd = open("test.html", O_RDONLY);
+    auto size = lseek(fd, 0, SEEK_END);
+    auto data = (char*)mmap(nullptr, size, PROT_READ, MAP_PRIVATE, fd, 0);
+    resp->setStatusCode(HttpResponse::k200Ok);
+    resp->setStatusMessage("OK");
+    resp->setContentType("text/html");
+    resp->addHeader("Server", "Muduo");
+    resp->setBody(data);
   } else {
     resp->setStatusCode(HttpResponse::k404NotFound);
     resp->setStatusMessage("Not Found");
+    resp->setBody("404 ERROR");
     resp->setCloseConnection(true);
+
   }
 }
 
