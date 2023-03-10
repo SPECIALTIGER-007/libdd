@@ -1,8 +1,4 @@
-#include <fcntl.h>
-#include <sys/mman.h>
-
-#include <fstream>
-
+#include "CallFunction.h"
 #include "HttpRequest.h"
 #include "HttpResponse.h"
 #include "HttpServer.h"
@@ -24,41 +20,20 @@ void onRequest(const HttpRequest& req, HttpResponse* resp) {
   }
 
   if (req.path() == "/") {
-    resp->setStatusCode(HttpResponse::k200Ok);
-    resp->setStatusMessage("OK");
-    resp->setContentType("text/html");
-    resp->addHeader("Server", "Muduo");
-    std::string now = Timestamp::now().toFormattedString();
-    resp->setBody(
-        "<html><head><title>This is title</title></head>"
-        "<body><h1>Hello</h1>Now is " +
-        now + "</body></html>");
+    defaultFunction(req, resp);
   } else if (req.path() == "/favicon.ico") {
     resp->setStatusCode(HttpResponse::k200Ok);
     resp->setStatusMessage("OK");
     resp->setContentType("image/png");
     resp->setBody(std::string(favicon, sizeof favicon));
   } else if (req.path() == "/hello") {
-    resp->setStatusCode(HttpResponse::k200Ok);
-    resp->setStatusMessage("OK");
-    resp->setContentType("text/plain");
-    resp->addHeader("Server", "Muduo");
-    resp->setBody("hello, world!\n");
-  } else if (req.path() == "/test-html") {
-    int fd = open("test.html", O_RDONLY);
-    auto size = lseek(fd, 0, SEEK_END);
-    auto data = (char*)mmap(nullptr, size, PROT_READ, MAP_PRIVATE, fd, 0);
-    resp->setStatusCode(HttpResponse::k200Ok);
-    resp->setStatusMessage("OK");
-    resp->setContentType("text/html");
-    resp->addHeader("Server", "Muduo");
-    resp->setBody(data);
+    textFunction(req, resp);
+  } else if (req.path() == "/test") {
+    htmlFunction(req, resp);
+  } else if (req.path() == "/p1") {
+    pictureFunction(req, resp);
   } else {
-    resp->setStatusCode(HttpResponse::k404NotFound);
-    resp->setStatusMessage("Not Found");
-    resp->setBody("404 ERROR");
-    resp->setCloseConnection(true);
-
+    exceptionFunction(req, resp);
   }
 }
 
