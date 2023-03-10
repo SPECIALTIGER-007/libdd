@@ -11,7 +11,7 @@ SET(PROJECT_BINARY_DIR ${PROJECT_SOURCE_DIR})
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 #set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -rdynamic -O2 -fPIC -std=c++17 -Wall -Wno-deprecated")
-set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O2 -g")
+set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O2")
 set(CMAKE_BUILD_TYPE Debug)
 
 include_directories(
