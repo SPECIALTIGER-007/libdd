@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cstring>
 #include <functional>
+#include <vector>
 
 #include "LogStream.h"
 #include "Timestamp.h"
@@ -33,7 +34,6 @@ class SourceFile {
 class Logger {
  public:
   enum LogLevel {
-    TRACE,
     DEBUG,
     INFO,
     WARN,
@@ -51,7 +51,7 @@ class Logger {
   // 流是会改变的
   LogStream& stream() { return impl_.stream_; }
 
-  // TODO:static关键字作用的函数必须在源文件实现?
+  // TODO:static关键字作用的函数必须在源文件实现
   static LogLevel logLevel();
   static void setLogLevel(LogLevel level);
 
@@ -60,6 +60,8 @@ class Logger {
   using FlushFunc = std::function<void()>;
   static void setOutput(OutputFunc);
   static void setFlush(FlushFunc);
+
+  static std::vector<std::string> color;
 
  private:
   // 内部类

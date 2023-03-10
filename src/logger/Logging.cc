@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include "color.h"
+
 namespace ThreadInfo {
 __thread char t_errnobuf[512];
 __thread char t_time[64];
@@ -13,9 +15,7 @@ const char* getErrnoMsg(int savedErrno) {
 }
 
 // 根据Level返回Level名字
-const char* getLevelName[Logger::LogLevel::LEVEL_COUNT]{
-    "TRACE ", "DEBUG ", "INFO  ", "WARN  ", "ERROR ", "FATAL ",
-};
+const char* getLevelName[Logger::LogLevel::LEVEL_COUNT]{"DEBUG ", "INFO  ", "WARN  ", "ERROR ", "FATAL"};
 
 Logger::LogLevel initLogLevel() { return Logger::INFO; }
 
@@ -30,10 +30,12 @@ Logger::FlushFunc g_flush = defaultFlush;
 
 Logger::Impl::Impl(Logger::LogLevel level, int savedErrno, const char* file, int line)
     : time_(Timestamp::now()), stream_(), level_(level), line_(line), basename_(file) {
+  stream_ << color[level];
   // 输出流 -> time
   formatTime();
   // 写入日志等级
-  stream_ << GeneralTemplate(getLevelName[level], 6);
+  stream_ << GeneralTemplate(getLevelName[level], 5);
+  stream_ << color.back();
   // TODO:error
   if (savedErrno != 0) {
     stream_ << getErrnoMsg(savedErrno) << " (errno=" << savedErrno << ") ";
@@ -93,3 +95,5 @@ void Logger::setLogLevel(Logger::LogLevel level) { g_logLevel = level; }
 void Logger::setOutput(OutputFunc out) { g_output = std::move(out); }
 
 void Logger::setFlush(FlushFunc flush) { g_flush = std::move(flush); }
+
+std::vector<std::string> Logger::color{GREEN, PURPLE, YELLOW, RED, RED, NONE};

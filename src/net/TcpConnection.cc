@@ -42,7 +42,7 @@ TcpConnection::TcpConnection(EventLoop *loop, std::string nameArg, int sockfd, c
   channel_->setCloseCallback(std::bind(&TcpConnection::handleClose, this));
   channel_->setErrorCallback(std::bind(&TcpConnection::handleError, this));
 
-  LOG_INFO << "TcpConnection::ctor[" << name_.c_str() << "] at fd =" << sockfd;
+  LOG_INFO << "TcpConnection::destructor[" << name_.c_str() << "] at fd =" << sockfd;
   socket_->setKeepAlive(true);
 }
 
