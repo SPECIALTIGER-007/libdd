@@ -29,7 +29,7 @@ Acceptor::Acceptor(EventLoop *loop, const InetAddress &ListenAddr, bool reusepor
   acceptSocket_.setReuseAddr(reuseport);
   acceptSocket_.setReusePort(true);
   acceptSocket_.setTcpNoDelay(true);
-  //  acceptSocket_.setKeepAlive(true);
+  acceptSocket_.setKeepAlive(true);
 
   acceptSocket_.bindAddress(ListenAddr);
 

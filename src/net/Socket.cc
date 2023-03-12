@@ -1,5 +1,6 @@
 #include "Socket.h"
 
+#include <errno.h>
 #include <netinet/tcp.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -49,8 +50,14 @@ void Socket::shutdownWrite() {
   /**
    * 关闭写端，但是可以接受客户端数据
    */
-  if (::shutdown(sockfd_, SHUT_WR) < 0) {
-    LOG_ERROR << "shutdownWrite error";
+  if (::shutdown(sockfd_, SHUT_RD) < 0) {
+    //    LOG_ERROR << "errno is " << errno;
+    // errno == 107 表示客户端已关闭连接
+
+    // TODO 找出errno == 107 的原因
+    if (errno != 107) {
+      LOG_ERROR << "shutdownWrite error,fd:" << sockfd_;
+    }
   }
   //  close(fd());
   //  LOG_INFO << "close fd:" << fd();
