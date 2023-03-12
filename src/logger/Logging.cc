@@ -18,7 +18,7 @@ const char* getErrnoMsg(int savedErrno) {
 const char* getLevelName[Logger::LogLevel::LEVEL_COUNT]{"DEBUG ", "INFO  ", "WARN  ", "ERROR ",
                                                         "FATAL"};
 
-Logger::LogLevel initLogLevel() { return Logger::INFO; }
+Logger::LogLevel initLogLevel() { return Logger::ERROR; }
 
 Logger::LogLevel g_logLevel = initLogLevel();
 

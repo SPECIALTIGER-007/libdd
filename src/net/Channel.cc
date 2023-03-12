@@ -68,7 +68,7 @@ void Channel::handleEventWithGuard(Timestamp receiveTime) {
 
   // 错误事件
   if (revents_ & (EPOLLERR)) {
-    LOG_ERROR << "the fd = " << this->fd();
+    LOG_ERROR << "fd:" << this->fd()<<", EPOLLERR!!!";
     if (errorCallback_) {
       errorCallback_();
     }
