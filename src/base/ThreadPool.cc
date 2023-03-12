@@ -2,7 +2,8 @@
 
 #include <utility>
 
-ThreadPool::ThreadPool(std::string name) : mutex_(), cond_(), name_(std::move(name)), running_(false) {}
+ThreadPool::ThreadPool(std::string name)
+    : mutex_(), cond_(), name_(std::move(name)), running_(false) {}
 
 ThreadPool::~ThreadPool() {
   stop();

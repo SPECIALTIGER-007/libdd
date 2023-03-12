@@ -49,9 +49,11 @@ void Socket::shutdownWrite() {
   /**
    * 关闭写端，但是可以接受客户端数据
    */
-  if (::shutdown(sockfd_, SHUT_WR) < 0) {
-    LOG_ERROR << "shutdownWrite error";
-  }
+    if (::shutdown(sockfd_, SHUT_WR) < 0) {
+      LOG_ERROR << "shutdownWrite error";
+    }
+//  close(fd());
+//  LOG_INFO << "close fd:" << fd();
 }
 
 // 不启动Nagle算法

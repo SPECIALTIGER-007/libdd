@@ -38,7 +38,8 @@ void test1(int i) {
       op1(0, 5000);
       steady_clock::time_point end = steady_clock::now();
       auto length = end - begin;
-      cout << "非连接池, 单线程, 用时: " << length.count() << " 纳秒, " << length.count() / 1000000 << " 毫秒" << endl;
+      cout << "非连接池, 单线程, 用时: " << length.count() << " 纳秒, " << length.count() / 1000000
+           << " 毫秒" << endl;
       break;
     }
       // 连接池, 单线程, 用时: 1746151375 纳秒, 1746 毫秒
@@ -48,7 +49,8 @@ void test1(int i) {
       op2(pool, 0, 5000);
       steady_clock::time_point end = steady_clock::now();
       auto length = end - begin;
-      cout << "连接池, 单线程, 用时: " << length.count() << " 纳秒, " << length.count() / 1000000 << " 毫秒" << endl;
+      cout << "连接池, 单线程, 用时: " << length.count() << " 纳秒, " << length.count() / 1000000
+           << " 毫秒" << endl;
       break;
     }
     default:;
@@ -75,7 +77,8 @@ void test2(int i) {
       t5.join();
       steady_clock::time_point end = steady_clock::now();
       auto length = end - begin;
-      cout << "非连接池, 多线程, 用时: " << length.count() << " 纳秒, " << length.count() / 1000000 << " 毫秒" << endl;
+      cout << "非连接池, 多线程, 用时: " << length.count() << " 纳秒, " << length.count() / 1000000
+           << " 毫秒" << endl;
       break;
     }
     case 2: {
@@ -94,7 +97,8 @@ void test2(int i) {
       t5.join();
       steady_clock::time_point end = steady_clock::now();
       auto length = end - begin;
-      cout << "连接池, 多线程, 用时: " << length.count() << " 纳秒, " << length.count() / 1000000 << " 毫秒" << endl;
+      cout << "连接池, 多线程, 用时: " << length.count() << " 纳秒, " << length.count() / 1000000
+           << " 毫秒" << endl;
       break;
     }
     default:;
@@ -114,7 +118,8 @@ int query() {
   // 从结果集中取出一行
   while (conn.next()) {
     // 打印每行字段值
-    cout << conn.value(0) << ", " << conn.value(1) << ", " << conn.value(2) << ", " << conn.value(3) << endl;
+    cout << conn.value(0) << ", " << conn.value(1) << ", " << conn.value(2) << ", " << conn.value(3)
+         << endl;
   }
   return 0;
 }

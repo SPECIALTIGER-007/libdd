@@ -28,7 +28,8 @@ class TcpServer : noncopyable {
     kReusePort,
   };
 
-  TcpServer(EventLoop *loop, const InetAddress &ListenAddr, std::string nameArg, Option option = kNoReusePort);
+  TcpServer(EventLoop *loop, const InetAddress &ListenAddr, std::string nameArg,
+            Option option = kNoReusePort);
   ~TcpServer();
 
   // 设置回调函数(用户自定义的函数传入)

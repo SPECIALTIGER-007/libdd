@@ -23,14 +23,14 @@ void showInfo(MemoryPool *Mpool, char *str) {
       printf(
           "第%02d块small block  已使用:%4ld  剩余空间:%4ld  引用:%4d  "
           "failed:%4d\n",
-          i, (unsigned char *)head->last_ - (unsigned char *)pool, head->end_ - head->last_, head->quote_,
-          head->failed_);
+          i, (unsigned char *)head->last_ - (unsigned char *)pool, head->end_ - head->last_,
+          head->quote_, head->failed_);
     } else {
       printf(
           "第%02d块small block  已使用:%4ld  剩余空间:%4ld  引用:%4d  "
           "failed:%4d\n",
-          i, (unsigned char *)head->last_ - (unsigned char *)head, head->end_ - head->last_, head->quote_,
-          head->failed_);
+          i, (unsigned char *)head->last_ - (unsigned char *)head, head->end_ - head->last_,
+          head->quote_, head->failed_);
     }
   }
 
@@ -95,7 +95,8 @@ void test2() {
     memory[i] = malloc(10);
   }
   auto end = std::chrono::steady_clock::now();
-  cout << "the time cost " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us"
+  cout << "the time cost "
+       << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us"
        << endl;
 
   start = std::chrono::steady_clock::now();
@@ -103,7 +104,8 @@ void test2() {
     free(memory[i]);
   }
   end = std::chrono::steady_clock::now();
-  cout << "the time cost " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us"
+  cout << "the time cost "
+       << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us"
        << endl;
   cout << "--------------------" << endl;
   cout << endl;
@@ -118,13 +120,15 @@ void test2() {
     memory[i] = pool.malloc(10);
   }
   end = std::chrono::steady_clock::now();
-  cout << "the time cost " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us"
+  cout << "the time cost "
+       << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us"
        << endl;
 
   start = std::chrono::steady_clock::now();
   pool.destroyPool();
   end = std::chrono::steady_clock::now();
-  cout << "the time cost " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us"
+  cout << "the time cost "
+       << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us"
        << endl;
   cout << "--------------------" << endl;
   cout << endl;

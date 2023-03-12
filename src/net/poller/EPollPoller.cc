@@ -22,7 +22,8 @@ EPollPoller::~EPollPoller() { ::close(epollfd_); }
 Timestamp EPollPoller::poll(int timeoutMs, ChannelList *activeChannels) {
   // 高并发情况经常被调用，影响效率，使用debug模式可以手动关闭
 
-  size_t numEvents = ::epoll_wait(epollfd_, &(*events_.begin()), static_cast<int>(events_.size()), timeoutMs);
+  size_t numEvents =
+      ::epoll_wait(epollfd_, &(*events_.begin()), static_cast<int>(events_.size()), timeoutMs);
   int saveErrno = errno;
   Timestamp now(Timestamp::now());
 

@@ -34,7 +34,8 @@ EventLoop::EventLoop()
   LOG_DEBUG << "EventLoop created " << this << " the index is " << threadId_;
   LOG_DEBUG << "EventLoop created wakeupFd " << wakeupChannel_->fd();
   if (t_loopInThisThread) {
-    LOG_FATAL << "Another EventLoop" << t_loopInThisThread << " exists in this thread " << threadId_;
+    LOG_FATAL << "Another EventLoop" << t_loopInThisThread << " exists in this thread "
+              << threadId_;
   } else {
     t_loopInThisThread = this;
   }

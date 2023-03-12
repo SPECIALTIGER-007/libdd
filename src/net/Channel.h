@@ -102,8 +102,9 @@ class Channel : noncopyable {
   int revents_;      // poller返回的具体发生的事件
   int index_;        // 在Poller上注册的情况
 
-  std::weak_ptr<void> tie_;  // 弱指针指向TcpConnection(必要时升级为shared_ptr多一份引用计数，避免用户误删)
-  bool tied_;                // 标志此 Channel 是否被调用过 Channel::tie 方法
+  std::weak_ptr<void>
+      tie_;  // 弱指针指向TcpConnection(必要时升级为shared_ptr多一份引用计数，避免用户误删)
+  bool tied_;  // 标志此 Channel 是否被调用过 Channel::tie 方法
 
   // 因为 channel 通道里面能够获知fd最终发生的具体的事件revents
   // 保存事件到来时的回调函数

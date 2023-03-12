@@ -22,7 +22,7 @@ class TimerQueue {
 
  private:
   using Entry = std::pair<Timestamp, Timer*>;  // 以时间戳作为键值获取定时器
-  using TimerList = std::set<Entry>;           // 底层使用红黑树管理，自动按照时间戳进行排序
+  using TimerList = std::set<Entry>;  // 底层使用红黑树管理，自动按照时间戳进行排序
 
   // 在本loop中添加定时器
   // 线程安全

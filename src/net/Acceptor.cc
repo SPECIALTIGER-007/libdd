@@ -19,12 +19,18 @@ static int createNonblocking() {
 }
 
 Acceptor::Acceptor(EventLoop *loop, const InetAddress &ListenAddr, bool reuseport)
-    : loop_(loop), acceptSocket_(createNonblocking()), acceptChannel_(loop, acceptSocket_.fd()), listenning_(false) {
+    : loop_(loop),
+      acceptSocket_(createNonblocking()),
+      acceptChannel_(loop, acceptSocket_.fd()),
+      listenning_(false) {
   LOG_DEBUG << "Acceptor create nonblocking socket, [fd = " << acceptChannel_.fd() << "]";
   // LOG_DEBUG("%s:%s:%d Acceptor create nonblocking socket, fd = %d\n",
   // __FILE__, __FUNCTION__, __LINE__, acceptChannel_.fd());
   acceptSocket_.setReuseAddr(reuseport);
   acceptSocket_.setReusePort(true);
+  acceptSocket_.setTcpNoDelay(true);
+  //  acceptSocket_.setKeepAlive(true);
+
   acceptSocket_.bindAddress(ListenAddr);
 
   /**

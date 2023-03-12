@@ -53,7 +53,9 @@ class EventLoop : noncopyable {
   /**
    * 定时任务相关函数
    */
-  void runAt(Timestamp timestamp, Functor&& cb) { timerQueue_->addTimer(std::move(cb), timestamp, 0.0); }
+  void runAt(Timestamp timestamp, Functor&& cb) {
+    timerQueue_->addTimer(std::move(cb), timestamp, 0.0);
+  }
 
   void runAfter(double waitTime, Functor&& cb) {
     Timestamp time(addTime(Timestamp::now(), waitTime));

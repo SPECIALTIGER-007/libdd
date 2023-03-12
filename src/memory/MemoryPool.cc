@@ -174,7 +174,8 @@ void MemoryPool::freeMemory(void* p) {
 
   SmallNode* small = pool_->head_;
   while (small != nullptr) {
-    if ((unsigned char*)small <= (unsigned char*)p && (unsigned char*)p <= (unsigned char*)small->end_) {
+    if ((unsigned char*)small <= (unsigned char*)p &&
+        (unsigned char*)p <= (unsigned char*)small->end_) {
       small->quote_--;
       // 引用计数为0才释放
       if (small->quote_ == 0) {

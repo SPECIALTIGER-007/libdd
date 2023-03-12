@@ -19,10 +19,12 @@ MysqlConn::~MysqlConn() {
 }
 
 // 连接数据库
-bool MysqlConn::connect(const std::string& user, const std::string& passwd, const std::string& dbName,
-                        const std::string& ip, const unsigned int& port) {
+bool MysqlConn::connect(const std::string& user, const std::string& passwd,
+                        const std::string& dbName, const std::string& ip,
+                        const unsigned int& port) {
   // 尝试与运行在主机上的MySQL数据库引擎建立连接
-  MYSQL* ptr = mysql_real_connect(conn_, ip.c_str(), user.c_str(), passwd.c_str(), dbName.c_str(), port, nullptr, 0);
+  MYSQL* ptr = mysql_real_connect(conn_, ip.c_str(), user.c_str(), passwd.c_str(), dbName.c_str(),
+                                  port, nullptr, 0);
   return ptr != nullptr;
 }
 

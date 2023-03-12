@@ -19,15 +19,18 @@ void defaultHttpCallback(const HttpRequest&, HttpResponse* resp) {
 HttpServer::HttpServer(EventLoop* loop, const InetAddress& listenAddr, const std::string& name,
                        TcpServer::Option option)
     : server_(loop, listenAddr, name, option), httpCallback_(defaultHttpCallback) {
-  server_.setConnectionCallback([this](auto&& PH1) { onConnection(std::forward<decltype(PH1)>(PH1)); });
+  server_.setConnectionCallback(
+      [this](auto&& PH1) { onConnection(std::forward<decltype(PH1)>(PH1)); });
   server_.setMessageCallback([this](auto&& PH1, auto&& PH2, auto&& PH3) {
-    onMessage(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2), std::forward<decltype(PH3)>(PH3));
+    onMessage(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+              std::forward<decltype(PH3)>(PH3));
   });
   server_.setThreadNum(4);
 }
 
 void HttpServer::start() {
-  LOG_INFO << "HttpServer[" << server_.name().c_str() << "] starts listening on " << server_.ipPort().c_str();
+  LOG_INFO << "HttpServer[" << server_.name().c_str() << "] starts listening on "
+           << server_.ipPort().c_str();
   server_.start();
 }
 
@@ -47,7 +50,7 @@ void HttpServer::onMessage(const TcpConnectionPtr& conn, Buffer* buf, Timestamp 
 #if 0
     // 打印请求报文
     std::string request = buf->GetBufferAllAsString();
-    std::cout << request << std::endl;
+//    std::cout << request << std::endl;
 #endif
 
   // 进行状态机解析
@@ -70,7 +73,8 @@ void HttpServer::onRequest(const TcpConnectionPtr& conn, const HttpRequest& req)
   const std::string& connection = req.getHeader("Connection");
 
   // 判断长连接还是短连接
-  bool close = connection == "close" || (req.version() == HttpRequest::kHttp10 && connection != "Keep-Alive");
+  bool close = connection == "close" ||
+               (req.version() == HttpRequest::kHttp10 && connection != "Keep-Alive");
   // TODO:这里有问题，但是强制改写了
   close = true;
   // 响应信息

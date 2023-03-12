@@ -10,7 +10,8 @@ class Timestamp {
  public:
   Timestamp() : microSecondsSinceEpoch_(0) {}
 
-  explicit Timestamp(int64_t microSecondsSinceEpoch) : microSecondsSinceEpoch_(microSecondsSinceEpoch) {}
+  explicit Timestamp(int64_t microSecondsSinceEpoch)
+      : microSecondsSinceEpoch_(microSecondsSinceEpoch) {}
 
   // 获取当前时间戳
   static Timestamp now();
@@ -23,7 +24,9 @@ class Timestamp {
   // 返回当前时间戳的微妙
   int64_t microSecondsSinceEpoch() const { return microSecondsSinceEpoch_; }
   // 返回当前时间戳的秒数
-  time_t secondsSinceEpoch() const { return static_cast<time_t>(microSecondsSinceEpoch_ / kMicroSecondsPerSecond); }
+  time_t secondsSinceEpoch() const {
+    return static_cast<time_t>(microSecondsSinceEpoch_ / kMicroSecondsPerSecond);
+  }
 
   // 失效的时间戳，返回一个值为0的Timestamp
   static Timestamp invalid() { return {}; }

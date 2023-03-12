@@ -23,8 +23,8 @@ static EventLoop *CheckLoopNotNull(EventLoop *loop) {
   return loop;
 }
 
-TcpConnection::TcpConnection(EventLoop *loop, std::string nameArg, int sockfd, const InetAddress &localAddr,
-                             const InetAddress &peerAddr)
+TcpConnection::TcpConnection(EventLoop *loop, std::string nameArg, int sockfd,
+                             const InetAddress &localAddr, const InetAddress &peerAddr)
     : loop_(CheckLoopNotNull(loop)),
       name_(std::move(nameArg)),
       state_(kConnecting),
@@ -42,12 +42,12 @@ TcpConnection::TcpConnection(EventLoop *loop, std::string nameArg, int sockfd, c
   channel_->setCloseCallback(std::bind(&TcpConnection::handleClose, this));
   channel_->setErrorCallback(std::bind(&TcpConnection::handleError, this));
 
-  LOG_INFO << "TcpConnection::destructor[" << name_.c_str() << "] at fd =" << sockfd;
+  LOG_INFO << "TcpConnection::destructor[" << name_.c_str() << "] at fd:" << sockfd;
   socket_->setKeepAlive(true);
 }
 
 TcpConnection::~TcpConnection() {
-  LOG_INFO << "TcpConnection::destruction[" << name_.c_str() << "] at fd=" << channel_->fd()
+  LOG_INFO << "TcpConnection::destruction[" << name_.c_str() << "] at fd:" << channel_->fd()
            << " state=" << static_cast<int>(state_);
 }
 
@@ -77,7 +77,9 @@ void TcpConnection::send(Buffer *buf) {
   }
 }
 
-void TcpConnection::sendInLoop(const std::string &message) { sendInLoop(message.data(), message.size()); }
+void TcpConnection::sendInLoop(const std::string &message) {
+  sendInLoop(message.data(), message.size());
+}
 
 /**
  * 发送数据 应用写的快 而内核发送数据慢
@@ -243,5 +245,5 @@ void TcpConnection::handleError() {
   } else {
     err = optval;
   }
-  LOG_ERROR << "cpConnection::handleError name:" << name_.c_str() << " - SO_ERROR:" << err;
+  LOG_ERROR << "TcpConnection::handleError name:" << name_.c_str() << " - SO_ERROR:" << err;
 }

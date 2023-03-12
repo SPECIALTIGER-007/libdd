@@ -15,7 +15,8 @@ static EventLoop *CheckLoopNotNull(EventLoop *loop) {
   return loop;
 }
 
-TcpServer::TcpServer(EventLoop *loop, const InetAddress &listenAddr, std::string nameArg, Option option)
+TcpServer::TcpServer(EventLoop *loop, const InetAddress &listenAddr, std::string nameArg,
+                     Option option)
     : loop_(CheckLoopNotNull(loop)),
       ipPort_(listenAddr.toIpPort()),
       name_(std::move(nameArg)),
@@ -68,8 +69,8 @@ void TcpServer::newConnection(int sockfd, const InetAddress &peerAddr) {
   // 新连接名字
   std::string connName = name_ + buf;
 
-  LOG_INFO << "TcpServer::newConnection [" << name_.c_str() << "] - new connection [" << connName.c_str() << "] from "
-           << peerAddr.toIpPort().c_str();
+  LOG_INFO << "TcpServer::newConnection [" << name_.c_str() << "] - new connection ["
+           << connName.c_str() << "] from " << peerAddr.toIpPort().c_str();
 
   // 通过sockfd获取其绑定的本机的ip地址和端口信息
   sockaddr_in local{};
@@ -100,7 +101,8 @@ void TcpServer::removeConnection(const TcpConnectionPtr &conn) {
 }
 
 void TcpServer::removeConnectionInLoop(const TcpConnectionPtr &conn) {
-  LOG_INFO << "TcpServer::removeConnectionInLoop [" << name_.c_str() << "] - connection " << conn->name().c_str();
+  LOG_INFO << "TcpServer::removeConnectionInLoop [" << name_.c_str() << "] - connection "
+           << conn->name().c_str();
 
   connections_.erase(conn->name());
   EventLoop *ioLoop = conn->getLoop();

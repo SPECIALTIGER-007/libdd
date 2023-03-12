@@ -41,7 +41,7 @@ void defaultFunction(const HttpRequest& req, HttpResponse* resp) {
 
 void htmlFunction(const HttpRequest& req, HttpResponse* resp) {
   auto path = req.path().substr(1, req.path().size() - 1);
-  path.append(".html");
+  //  path.append(".html");
   auto data = openAndMmap(path);
   resp->setStatusCode(HttpResponse::k200Ok);
   resp->setStatusMessage("OK");
@@ -52,7 +52,7 @@ void htmlFunction(const HttpRequest& req, HttpResponse* resp) {
 
 void pictureFunction(const HttpRequest& req, HttpResponse* resp) {
   auto path = req.path().substr(1, req.path().size() - 1);
-  path.append(".jpg");
+  //  path.append(".jpg");
   struct stat statbuf {};
   stat(path.data(), &statbuf);
   auto filesize = statbuf.st_size;
@@ -68,6 +68,15 @@ void pictureFunction(const HttpRequest& req, HttpResponse* resp) {
 }
 
 void textFunction(const HttpRequest& req, HttpResponse* resp) {
+  resp->setStatusCode(HttpResponse::k200Ok);
+  resp->setStatusMessage("OK");
+  resp->setContentType("text/html");
+  resp->addHeader("Server", "Muduo");
+  std::string now = Timestamp::now().toFormattedString();
+  resp->setBody("textFunction");
+}
+
+void largeFileFunction(const HttpRequest& req, HttpResponse* resp) {
   resp->setStatusCode(HttpResponse::k200Ok);
   resp->setStatusMessage("OK");
   resp->setContentType("text/html");

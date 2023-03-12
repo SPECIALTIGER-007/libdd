@@ -11,7 +11,7 @@ class Socket : noncopyable {
   ~Socket();
 
   // 获取sockfd
-  int fd() const { return sockfd_; }
+  [[nodiscard]] int fd() const { return sockfd_; }
   // 绑定sockfd
   void bindAddress(const InetAddress &localaddr);
   // 使sockfd为可接受连接状态
