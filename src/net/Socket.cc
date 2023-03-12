@@ -10,7 +10,11 @@
 #include "InetAddress.h"
 #include "Logging.h"
 
-Socket::~Socket() { ::close(sockfd_); }
+Socket::~Socket() {
+  if (close(sockfd_) < 0) {
+    LOG_ERROR << "close error,fd:" << sockfd_ << ",errno:" << errno;
+  }
+}
 
 void Socket::bindAddress(const InetAddress &localaddr) {
   if (0 != ::bind(sockfd_, (sockaddr *)localaddr.getSockAddr(), sizeof(sockaddr_in))) {
@@ -50,17 +54,21 @@ void Socket::shutdownWrite() {
   /**
    * 关闭写端，但是可以接受客户端数据
    */
-  if (::shutdown(sockfd_, SHUT_RD) < 0) {
-    //    LOG_ERROR << "errno is " << errno;
-    // errno == 107 表示客户端已关闭连接
-
-    // TODO 找出errno == 107 的原因
-    if (errno != 107) {
-      LOG_ERROR << "shutdownWrite error,fd:" << sockfd_;
-    }
+  //  if (::shutdown(sockfd_, SHUT_RDWR) < 0) {
+  // errno == 107 表示客户端已关闭连接
+  //    LOG_ERROR << "shutdownWrite error";
+  //    // TODO 找出errno == 107 的原因
+  //    if (errno != 107) {
+  //      LOG_ERROR << "shutdownWrite error,fd:" << sockfd_;
+  //    }
+  //  }
+  if (close(sockfd_) < 0) {
+    LOG_ERROR << "close error,fd:" << sockfd_ << ",errno:" << errno;
   }
-  //  close(fd());
-  //  LOG_INFO << "close fd:" << fd();
+  //  if (errno != 107) {
+  //  LOG_ERROR << "close error,fd:" << sockfd_;
+  //  LOG_ERROR << "close error,errno:" << errno;
+  //  }
 }
 
 // 不启动Nagle算法
