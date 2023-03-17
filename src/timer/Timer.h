@@ -23,8 +23,8 @@ class Timer : noncopyable {
 
   void run() const { callback_(); }
 
-  Timestamp expiration() const { return expiration_; }
-  bool repeat() const { return repeat_; }
+  [[nodiscard]] Timestamp expiration() const { return expiration_; }
+  [[nodiscard]] bool repeat() const { return repeat_; }
 
   // 重启定时器(如果是非重复事件则到期时间置为0)
   void restart(Timestamp now);

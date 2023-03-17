@@ -1,9 +1,8 @@
 #include "ThreadPool.h"
 
-#include <stdio.h>
 #include <unistd.h>
 
-#include <functional>
+#include <cstdio>
 
 #include "CurrentThread.h"
 #include "Logging.h"
@@ -26,6 +25,5 @@ void initFunc() { printf("Create thread %d\n", ++count); }
 
 int main() {
   test1();
-
   return 0;
 }

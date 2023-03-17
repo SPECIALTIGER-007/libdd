@@ -23,7 +23,7 @@ int createTimerfd() {
 
 TimerQueue::TimerQueue(EventLoop* loop)
     : loop_(loop), timerfd_(createTimerfd()), timerfdChannel_(loop_, timerfd_), timers_() {
-  timerfdChannel_.setReadCallback(std::bind(&TimerQueue::handleRead, this));
+  timerfdChannel_.setReadCallback([&](Timestamp) { handleRead(); });
   timerfdChannel_.enableReading();
 }
 

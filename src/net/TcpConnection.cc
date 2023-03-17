@@ -1,10 +1,10 @@
 #include "TcpConnection.h"
 
-#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
 #include <cerrno>
+#include <cstring>
 #include <functional>
 #include <string>
 #include <utility>
@@ -37,10 +37,10 @@ TcpConnection::TcpConnection(EventLoop *loop, std::string nameArg, int sockfd,
 {
   // 下面给channel设置相应的回调函数 poller给channel通知感兴趣的事件发生了
   // channel会回调相应的回调函数
-  channel_->setReadCallback(std::bind(&TcpConnection::handleRead, this, std::placeholders::_1));
-  channel_->setWriteCallback(std::bind(&TcpConnection::handleWrite, this));
-  channel_->setCloseCallback(std::bind(&TcpConnection::handleClose, this));
-  channel_->setErrorCallback(std::bind(&TcpConnection::handleError, this));
+  channel_->setReadCallback([this](Timestamp receiveStamp) { handleRead(receiveStamp); });
+  channel_->setWriteCallback([this] { handleWrite(); });
+  channel_->setCloseCallback([this] { handleClose(); });
+  channel_->setErrorCallback([this] { handleError(); });
 
   LOG_INFO << "TcpConnection::destructor[" << name_.c_str() << "] at fd:" << sockfd;
   socket_->setKeepAlive(true);
@@ -58,8 +58,8 @@ void TcpConnection::send(const std::string &buf) {
       sendInLoop(buf.c_str(), buf.size());
     } else {
       // 遇到重载函数的绑定，可以使用函数指针来指定确切的函数
-      void (TcpConnection::*fp)(const void *data, size_t len) = &TcpConnection::sendInLoop;
-      loop_->runInLoop(std::bind(fp, this, buf.c_str(), buf.size()));
+      //      void (TcpConnection::*fp)(const void *data, size_t len) = &TcpConnection::sendInLoop;
+      loop_->runInLoop([this]() { sendInLoop(); });
     }
   }
 }

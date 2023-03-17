@@ -1,21 +1,21 @@
 #include "EventLoopThread.h"
 
+#include <utility>
+
 #include "EventLoop.h"
 
-EventLoopThread::EventLoopThread(const ThreadInitCallback &cb, const std::string &name)
+EventLoopThread::EventLoopThread(ThreadInitCallback cb, const std::string &name)
     : loop_(nullptr),
       exiting_(false),
-      thread_(std::bind(&EventLoopThread::threadFunc, this),
-              name)  // 新线程绑定此函数
-      ,
+      thread_([this] { threadFunc(); }, name),  // 新线程绑定此函数
       mutex_(),
       cond_(),
-      callback_(cb)  // 传入的线程初始化回调函数，用户自定义的
+      callback_(std::move(cb))  // 传入的线程初始化回调函数，用户自定义的
 {}
 
 EventLoopThread::~EventLoopThread() {
   exiting_ = true;
-  if (loop_ != nullptr) {
+  if (loop_) {
     /**
      * TODO:
      * 不允许指针指向不完整的类类型 "EventLoop"
@@ -32,11 +32,11 @@ EventLoop *EventLoopThread::startLoop() {
   // 调用startLoop即开启一个新线程
   thread_.start();
 
-  EventLoop *loop = nullptr;
+  EventLoop *loop;
   {
     // 等待新线程执行threadFunc完毕，所以使用cond_.wait
     std::unique_lock<std::mutex> lock(mutex_);
-    while (loop_ == nullptr) {
+    while (!loop_) {
       cond_.wait(lock);
     }
     loop = loop_;

@@ -2,6 +2,7 @@
 
 #include <semaphore.h>
 
+#include <iostream>
 #include <memory>
 #include <utility>
 
@@ -43,12 +44,9 @@ void Thread::start() {
   thread_ = std::make_shared<std::thread>([&]() {
     // 获取线程tid
     tid_ = CurrentThread::tid();
-    // v操作
     sem_post(&sem);
-    // 开启一个新线程专门执行该线程函数
     func_();
   });
-
   /**
    * 这里必须等待获取上面新创建的线程的tid
    * 未获取到信息则不会执行sem_post，所以会被阻塞住
