@@ -25,7 +25,7 @@ class EventLoop : noncopyable {
   void loop();
   void quit();
 
-  Timestamp pollReturnTime() const { return pollReturnTime_; }
+  [[nodiscard]] [[maybe_unused]] Timestamp pollReturnTime() const { return pollReturnTime_; }
 
   // 在当前线程同步调用函数
   void runInLoop(const Functor& cb);

@@ -58,8 +58,8 @@ void TcpConnection::send(const std::string &buf) {
       sendInLoop(buf.c_str(), buf.size());
     } else {
       // 遇到重载函数的绑定，可以使用函数指针来指定确切的函数
-      //      void (TcpConnection::*fp)(const void *data, size_t len) = &TcpConnection::sendInLoop;
-      loop_->runInLoop([this]() { sendInLoop(); });
+      void (TcpConnection::*fp)(const void *data, size_t len) = &TcpConnection::sendInLoop;
+      loop_->runInLoop(std::bind(fp, this, buf.c_str(), buf.size()));
     }
   }
 }

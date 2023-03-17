@@ -1,7 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <chrono>
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <vector>
 
@@ -10,12 +9,11 @@ using std::cout;
 using std::endl;
 using std::vector;
 
-void showInfo(MemoryPool *Mpool, char *str) {
+void showInfo(MemoryPool *Mpool, const char *str) {
   printf("\r\n\r\n------start pool status %s------\r\n\r\n", str);
   Pool *pool = Mpool->getPool();
-  SmallNode *head = nullptr;
   int i = 1;
-  for (head = pool->head_; head; head = head->next_, i++) {
+  for (auto head = pool->head_; head; head = head->next_, i++) {
     if (pool->current_ == head) {
       printf("current==>第%d块\n", i);
     }
@@ -82,7 +80,7 @@ void test1() {
 }
 
 #define ALLOCATE_COUNT 1000000
-#define ALLOCATE_SIZE 10
+// #define ALLOCATE_SIZE 10
 
 void test2() {
   // vector<void*> memoryVector(100);
@@ -91,8 +89,8 @@ void test2() {
   cout << "use malloc free time" << endl;
   cout << "--------------------" << endl;
   auto start = std::chrono::steady_clock::now();
-  for (int i = 0; i < ALLOCATE_COUNT; i++) {
-    memory[i] = malloc(10);
+  for (auto &i : memory) {
+    i = malloc(10);
   }
   auto end = std::chrono::steady_clock::now();
   cout << "the time cost "
@@ -100,8 +98,8 @@ void test2() {
        << endl;
 
   start = std::chrono::steady_clock::now();
-  for (int i = 0; i < ALLOCATE_COUNT; i++) {
-    free(memory[i]);
+  for (auto &i : memory) {
+    free(i);
   }
   end = std::chrono::steady_clock::now();
   cout << "the time cost "
@@ -116,8 +114,8 @@ void test2() {
   cout << "use MemoryPool time" << endl;
   cout << "--------------------" << endl;
   start = std::chrono::steady_clock::now();
-  for (int i = 0; i < ALLOCATE_COUNT; i++) {
-    memory[i] = pool.malloc(10);
+  for (auto &i : memory) {
+    i = pool.malloc(10);
   }
   end = std::chrono::steady_clock::now();
   cout << "the time cost "

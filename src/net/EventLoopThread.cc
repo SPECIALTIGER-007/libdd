@@ -32,7 +32,7 @@ EventLoop *EventLoopThread::startLoop() {
   // 调用startLoop即开启一个新线程
   thread_.start();
 
-  EventLoop *loop;
+  EventLoop *loop{nullptr};
   {
     // 等待新线程执行threadFunc完毕，所以使用cond_.wait
     std::unique_lock<std::mutex> lock(mutex_);
